@@ -16,19 +16,20 @@ var ttlRemove = function() {
 		.limit(1)
 		.toArray();
 	if (deletePointResult.length) {
-		var deletePoint = deletePointResult[0];
+		var deletePoint = deletePointResult[0]._id;
 	} else {
 		deletePointResult = db[COLLECTION].find({_id: {$lte: objId}}, {_id: 1})
 			.sort({_id: -1})
 			.limit(1)
 			.toArray();
 		if (deletePointResult.length) {
-			deletePoint = deletePointResult[0];
+			deletePoint = deletePointResult[0]._id;
 		}
 	}
 
 	if (deletePoint) {
-		db[COLLECTION].remove({_id: {$lte: deletePoint}});
+		print(deletePoint.getTimestamp());
+		db[COLLECTION].remove({_id: {$lt: deletePoint}});
 		return true;
 	}
 
