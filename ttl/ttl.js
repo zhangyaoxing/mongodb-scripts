@@ -1,24 +1,24 @@
-var DAYS_TO_KEEP = 30;
-var COLLECTION = "LOG_TRACE_T";
-var GAP_TIME_SECS = 1;
-var DELETE_BATCH_SIZE = 100;
+var DAYS_TO_KEEP = 130;
+var COLLECTION = "IOC_LSPLocInfo";
+var GAP_TIME_SECS = 10;
+var DELETE_BATCH_SIZE = 1;
 
-var secsToKeep = DAYS_TO_KEEP * 3600 * 24;
+var secsToKeep = DAYS_TO_KEEP * 86400;	// 60m * 60s * 24h = 86400
 var now = new Date().getTime();
 var hexSecs = (Math.floor(now / 1000) - secsToKeep).toString(16);
 var objId = ObjectId(hexSecs + "0000000000000000");
 
-function ttlRemove() {
-	var deletePointResult = db[COLLECTION].find({_id {$lte: objId}})
+var ttlRemove = function() {
+	var deletePoint = null;
+	var deletePointResult = db[COLLECTION].find({_id: {$lte: objId}}, {_id: 1})
 		.sort({_id: 1})
 		.skip(DELETE_BATCH_SIZE)
 		.limit(1)
 		.toArray();
-	var deletePoint = null;
 	if (deletePointResult.length) {
 		var deletePoint = deletePointResult[0];
 	} else {
-		deletePointResult = db[COLLECTION].find({_id {$lte: objId}})
+		deletePointResult = db[COLLECTION].find({_id: {$lte: objId}}, {_id: 1})
 			.sort({_id: -1})
 			.limit(1)
 			.toArray();
@@ -29,8 +29,12 @@ function ttlRemove() {
 
 	if (deletePoint) {
 		db[COLLECTION].remove({_id: {$lte: deletePoint}});
-		setTimeout(ttlRemove, GAP_TIME_SECS * 1000);
+		return true;
 	}
+
+	return false;
 }
 
-ttlRemove();
+while (ttlRemove()) {
+	sleep(GAP_TIME_SECS * 1000);
+}
