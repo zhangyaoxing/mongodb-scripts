@@ -1,4 +1,4 @@
-var DAYS_TO_KEEP = 136;
+var DAYS_TO_KEEP = 135;
 var COLLECTION = "IOC_LSPLocInfo";
 var GAP_TIME_SECS = 1;
 var DELETE_BATCH_SIZE = 100;
