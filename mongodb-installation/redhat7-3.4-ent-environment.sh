@@ -1,12 +1,46 @@
-yum install -y numactl
-sudo mkdir /etc/tuned/no-thp
-echo -e '[main]
-include=virtual-guest
+echo -e '#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          disable-transparent-hugepages
+# Required-Start:    $local_fs
+# Required-Stop:
+# X-Start-Before:    mongod mongodb-mms-automation-agent
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Disable Linux transparent huge pages
+# Description:       Disable Linux transparent huge pages, to improve
+#                    database performance.
+### END INIT INFO
 
-[vm]
-transparent_hugepages=never' > /etc/tuned/no-thp/tuned.conf 
+case $1 in
+  start)
+    if [ -d /sys/kernel/mm/transparent_hugepage ]; then
+      thp_path=/sys/kernel/mm/transparent_hugepage
+    elif [ -d /sys/kernel/mm/redhat_transparent_hugepage ]; then
+      thp_path=/sys/kernel/mm/redhat_transparent_hugepage
+    else
+      return 0
+    fi
 
-# diable thp
-tuned-adm profile no-thp
+    echo 'never' > ${thp_path}/enabled
+    echo 'never' > ${thp_path}/defrag
+
+    re='^[0-1]+$'
+    if [[ $(cat ${thp_path}/khugepaged/defrag) =~ $re ]]
+    then
+      # RHEL 7
+      echo 0  > ${thp_path}/khugepaged/defrag
+    else
+      # RHEL 6
+      echo 'no' > ${thp_path}/khugepaged/defrag
+    fi
+
+    unset re
+    unset thp_path
+    ;;
+esac' > /etc/init.d/disable-transparent-hugepages
+chkconfig --add disable-transparent-hugepages
+chmod 755 /etc/init.d/disable-transparent-hugepages
+service disable-transparent-hugepages start
+
 cat /sys/kernel/mm/transparent_hugepage/enabled
 cat /sys/kernel/mm/transparent_hugepage/defrag
