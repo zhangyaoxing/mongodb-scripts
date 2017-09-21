@@ -5,7 +5,7 @@ gpgcheck=1
 enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc' > /etc/yum.repos.d/mongodb-ee.repo
 
-yum install -y mongodb-enterprise
+yum install -y mongodb-enterprise numactl
 mkdir -p /data/db
 openssl rand -base64 756 > /data/keyfile
 chmod 400 /data/keyfile
