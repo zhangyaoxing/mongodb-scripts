@@ -14,13 +14,13 @@ if [ -z $1 ]; then
 fi
 
 if [ -z $2 ]; then
-    old='+365'
+    old="+365"
 else
     old=$2
 fi
 
 if [ -z $3 ]; then
-    pattern='*.gz'
+    pattern="*.gz"
 else
     pattern=$3
 fi
