@@ -1,36 +1,50 @@
 ## Create self-signed root certificate - it is to be used for signing all of the other certificates
 - Generate the private root key file - this file should be kept secure
-
-    openssl genrsa -out rootCA.key 2048 
+```bash
+openssl genrsa -out rootCA.key 4096 
+```
 
 - Generate the public root certificate - it is our CAFile that has to be distributed among the servers and clients so they could validate each others certificates
-
-    openssl req -x509 -new -nodes -key rootCA.key -days 365 -out rootCA.crt
+```bash
+openssl req -x509 -new -nodes -key rootCA.key -days 365 -out rootCA.crt
+```
 
 ## Generate a certificate to be used for a MongoDB server:
 - Generate the private key file
-
-    openssl genrsa -out server.key 2048 
+```bash
+openssl genrsa -out server.key 4096 
+```
 
 - Generate a CSR. At this step there will be prompt for a number of things including the Common Name (CN). It is very important to ensure that the CN you specified matches the FQDN of the host the certificate should be used on (in this case, the host that will be running the mongod process). Otherwise the certificate validation may fail.
-
-    openssl req -new -key server.key -out server.csr
+```bash
+openssl req -new -key server.key -out server.csr
+```
 
 - Use the CSR to create a certificate signed with our root certificate
-
-    openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 365
+```bash
+openssl x509 -req -in server.csr \
+  -CA rootCA.crt \
+  -CAkey rootCA.key \
+  -CAcreateserial \
+  -out server.crt \
+  -days 365 \
+  -extensions extensions \
+  -extfile x509.config
+```
 
 - Concatenate them into a single .pem file - that is the PEMKeyFile that should be used to start the monogd process
-
-    cat server.key server.crt > server.pem
+```bash
+cat server.key server.crt > server.pem
+```
 
 - Verify that the .pem file can be validated with the root certificate that was used to sign it
-
-    openssl verify -CAfile rootCA.crt server.pem 
+```bash
+openssl verify -CAfile rootCA.crt server.pem 
+```
 
 That should return
 
-    server.pem: OK
+> server.pem: OK
 
 ## Use the same procedure to create a client certificate:
     openssl genrsa -out client.key 2048
