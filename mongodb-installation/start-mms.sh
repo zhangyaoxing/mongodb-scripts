@@ -14,8 +14,8 @@ chown -R mongod:mongod /data
 setenforce Permissive
 sed -i 's%dbPath: /var/lib/mongo%dbPath: /data/db/%' /etc/mongod.conf
 
-curl -O https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.12.56844.20200408T2127Z-1.x86_64.rpm
-rpm -ivh mongodb-mms-4.2.12.56844.20200408T2127Z-1.x86_64.rpm
+curl -O https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.16.56965.20200805T1936Z-1.x86_64.rpm
+rpm -ivh mongodb-mms-4.2.16.56965.20200805T1936Z-1.x86_64.rpm
 
 echo -e "
 mms.fromEmailAddr=admin@yaoxing.online
