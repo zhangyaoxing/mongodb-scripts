@@ -22,10 +22,8 @@ ssh-copy-id root@$host
 ./minishift start
 echo `./minishift oc-env` | tee -a ~/.bash_profile
 echo `./minishift oc-env` | tee -a ~/.bashrc
-`./minishift oc-env`
 
 cd ..
 git clone https://github.com/mongodb/mongodb-enterprise-kubernetes.git
-
 
 echo "Minishift ready. Re-loging to use oc."
