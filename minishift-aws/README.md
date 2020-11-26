@@ -14,6 +14,5 @@ Enter file in which to save the key (/home/centos/.ssh/id_rsa):
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 ```
-- When being asked for the hostname, paste the **public hostname** of current server.
 
 Wait for the script to finish, and you are ready to go.
