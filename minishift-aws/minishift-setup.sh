@@ -12,8 +12,7 @@ curl -OL https://github.com/minishift/minishift/releases/download/v1.34.2/minish
 tar -zxvf minishift-1.34.2-linux-amd64.tgz
 cd minishift-1.34.2-linux-amd64
 
-read -p "Input public DNS of current server:" host
-# host=`curl -q http://checkip.amazonaws.com`
+host=`curl http://169.254.169.254/latest/meta-data/public-hostname`
 ssh-copy-id root@$host
 ./minishift config set remote-ipaddress $host
 ./minishift config set remote-ssh-key ~/.ssh/id_rsa
