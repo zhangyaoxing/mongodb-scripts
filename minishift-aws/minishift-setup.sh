@@ -12,8 +12,8 @@ curl -OL https://github.com/minishift/minishift/releases/download/v1.34.2/minish
 tar -zxvf minishift-1.34.2-linux-amd64.tgz
 cd minishift-1.34.2-linux-amd64
 
-# read -p "Input public DNS of current server:" host
-host=`curl -q http://checkip.amazonaws.com`
+read -p "Input public DNS of current server:" host
+# host=`curl -q http://checkip.amazonaws.com`
 ssh-copy-id root@$host
 ./minishift config set remote-ipaddress $host
 ./minishift config set remote-ssh-key ~/.ssh/id_rsa
@@ -23,9 +23,10 @@ ssh-copy-id root@$host
 ./minishift start
 echo `./minishift oc-env` | tee -a ~/.bash_profile
 echo `./minishift oc-env` | tee -a ~/.bashrc
+`./minishift oc-env`
 
 cd ..
 git clone https://github.com/mongodb/mongodb-enterprise-kubernetes.git
 
 
-echo "Minishift ready."
+echo "Minishift ready. Re-loging to use oc."
