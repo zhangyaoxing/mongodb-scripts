@@ -6,7 +6,7 @@ baseurl=https://repo.mongodb.com/yum/redhat/$releasever/mongodb-enterprise/4.2/$
 gpgcheck=1
 enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
-' > /etc/yum.repos.d/mongodb-ee-4.0.repo
+' > /etc/yum.repos.d/mongodb-ee-4.2.repo
 
 yum install -y mongodb-enterprise 
 mkdir -p /data/db
