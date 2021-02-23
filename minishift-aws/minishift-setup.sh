@@ -20,8 +20,8 @@ ssh-copy-id root@$host
 ./minishift config set vm-driver generic
 ./minishift config view
 ./minishift start
-echo `./minishift oc-env` | sudo tee -a ~/.bash_profile
-echo `./minishift oc-env` | sudo tee -a ~/.bashrc
+echo `./minishift oc-env` | sudo tee -a /root/.bash_profile
+echo `./minishift oc-env` | sudo tee -a /root/.bashrc
 
 cd ..
 git clone https://github.com/mongodb/mongodb-enterprise-kubernetes.git
