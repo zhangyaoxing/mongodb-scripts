@@ -17,7 +17,7 @@ openssl genrsa -out server.key 4096
 
 - Generate a CSR. At this step there will be prompt for a number of things including the Common Name (CN). It is very important to ensure that the CN you specified matches the FQDN of the host the certificate should be used on (in this case, the host that will be running the mongod process). Otherwise the certificate validation may fail.
 ```bash
-openssl req -new -key server.key -out server.csr
+openssl req -new -key server.key -out server.csr -config x509.config
 ```
 
 - Use the CSR to create a certificate signed with our root certificate
@@ -28,7 +28,7 @@ openssl x509 -req -in server.csr \
   -CAcreateserial \
   -out server.crt \
   -days 365 \
-  -extensions extensions \
+  -extensions req_ext \
   -extfile x509.config
 ```
 
