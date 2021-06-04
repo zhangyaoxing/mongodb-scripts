@@ -6,7 +6,7 @@ openssl genrsa -out rootCA.key 4096
 
 - Generate the public root certificate - it is our CAFile that has to be distributed among the servers and clients so they could validate each others certificates
 ```bash
-openssl req -x509 -new -nodes -key rootCA.key -days 365 -out rootCA.crt
+openssl req -x509 -new -nodes -key rootCA.key -days 365 -out rootCA.crt -sha256
 ```
 
 ## Generate a certificate to be used for a MongoDB server:
@@ -29,7 +29,8 @@ openssl x509 -req -in server.csr \
   -out server.crt \
   -days 365 \
   -extensions req_ext \
-  -extfile x509.config
+  -extfile x509.config \
+  -sha256
 ```
 
 - Concatenate them into a single .pem file - that is the PEMKeyFile that should be used to start the monogd process
