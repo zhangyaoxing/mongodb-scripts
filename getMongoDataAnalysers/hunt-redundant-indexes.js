@@ -1,5 +1,3 @@
-load("/Users/yaoxingzhang/Downloads/logs/Walmart/Get_mongo_date_0926/sango-getMongoData-output.json");
-
 function isPrefix(keys1, keys2, vals1, vals2) {
     if (keys1.length < keys2.length) {
         var isPrefix = true;
@@ -13,33 +11,33 @@ function isPrefix(keys1, keys2, vals1, vals2) {
         return isPrefix;
     }
 };
-(function() {
+function huntRedundantIndex(json) {
     print("|ns|redundant|covered|");
     print("|-----|-----|-----|");
-    json.filter(doc => /getIndexes/.test(doc.command)).map(doc => doc.output).forEach(doc => {
-        if (!doc) {
+    json.filter(doc => /getIndexes/.test(doc.command)).forEach(doc => {
+        if (!doc.output) {
             // This is a view
             // printjson(doc);
             return;
         }
-        doc.forEach(idx1 => {
+        var ns = `${doc.commandParameters.db}.${doc.commandParameters.collection}`;
+        doc.output.forEach(idx1 => {
             var keys1 = Object.keys(idx1.key);
             var vals1 = Object.values(idx1.key);
             // printjson(keys1);
-            for(var i = 0; i < doc.length; i++) {
-                var idx2 = doc[i];
+            for(var i = 0; i < doc.output.length; i++) {
+                var idx2 = doc.output[i];
                 var keys2 = Object.keys(idx2.key);
                 var vals2 = Object.values(idx2.key);
                 // printjson(keys2);
                 if (isPrefix(keys1, keys2, vals1, vals2)) {
-                    var ns = idx1.ns;
+                    // var ns = idx1.ns;
                     var redundant = JSON.stringify(idx1.key);
                     var covered = JSON.stringify(idx2.key);
-                    print(`|${ns}|${redundant}|${covered}|`);
-                    
+                    print(`|${ns}|\\${redundant}|\\${covered}|`);
                     break;
                 }
             };
         });
     });
-})();
+};
