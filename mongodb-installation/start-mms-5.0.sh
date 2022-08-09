@@ -17,8 +17,8 @@ sed -i 's%SELINUX=enforcing%SELINUX=permissive%' /etc/selinux/config
 sed -i 's%dbPath: /var/lib/mongo%dbPath: /data/db/%' /etc/mongod.conf
 
 # Download & install Ops Manager
-curl -O https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-5.0.8.100.20220302T0204Z-1.x86_64.rpm
-rpm -ivh mongodb-mms-5.0.8.100.20220302T0204Z-1.x86_64.rpm
+curl -O https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-5.0.14.100.20220802T1010Z-1.x86_64.rpm
+rpm -ivh mongodb-mms-5.0.14.100.20220802T1010Z-1.x86_64.rpm
 
 # Sign HTTPS certificate
 openssl genrsa -out rootCA.key 4096 
