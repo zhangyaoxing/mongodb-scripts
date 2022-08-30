@@ -1,8 +1,6 @@
-load("/Users/yaoxingzhang/Downloads/logs/Walmart/Get_mongo_date_0926/sango-getMongoData-output.json");
 load("index-info.js");
-var LOW_THRESHOLD = 1.0;
 
-(function() {
+function huntLowUseIndex(json) {
     print("|ns|index|accesses/hour|size(MB)|");
     print("|-----|-----|-----|-----|");
     var indexes = indexInfo(json);
@@ -26,7 +24,7 @@ var LOW_THRESHOLD = 1.0;
             var durationHours = (now - stat.since) / 1000.0 / 3600.0;
             var accPerHour = stat.accesses / durationHours;
             var key = JSON.stringify(stat.key)
-            print(`|${ns}|${key}|${accPerHour}|${indexes[ns][key].indexSize}|`);
+            print(`|${ns}|\\${key}|${accPerHour}|${indexes[ns][key].indexSize}|`);
         });
     });
-})();
+};
