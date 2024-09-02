@@ -14,6 +14,8 @@ transparent_hugepages=never
 [disk]
 # Set to 8 for HHD, 4 for SSD. 
 # This value may change based on performance test
+# devices=dm-9,sda
+alpm=max_performance
 readahead=8
 [sysctl]
 # ktune sysctl settings for rhel6 servers, maximizing i/o throughput
