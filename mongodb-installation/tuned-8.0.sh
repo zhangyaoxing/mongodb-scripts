@@ -1,0 +1,60 @@
+#!/bin/bash
+mkdir /etc/tuned/mongodb
+echo '#!/bin/bash
+# tuned configuration
+[main]
+include=virtual-guest
+summary=Optimize for MongoDB wiredTiger Performance
+[cpu]
+force_latency=1
+governor=performance
+energy_perf_bias=performance
+min_perf_pct=100
+[vm]
+transparent_hugepages=always
+[disk]
+# Set to 8 for HHD, 4 for SSD. 
+# This value may change based on performance test
+# devices=dm-9,sda
+alpm=max_performance
+readahead=8
+[sysctl]
+# ktune sysctl settings for rhel6 servers, maximizing i/o throughput
+#
+# Minimal preemption granularity for CPU-bound tasks:
+# (default: 1 msec#  (1 + ilog(ncpus)), units: nanoseconds)
+kernel.sched_min_granularity_ns=10000000
+# If a workload mostly uses anonymous memory and it hits this limit, 
+# the entire working set is buffered for I/O, and any more write
+# buffering would require
+# swapping, so it'"'"'s time to throttle writes until I/O can catch up.  
+# Workloads that mostly use file mappings may be able to use even higher
+# values.
+#
+# The generator of dirty data starts writeback at this percentage 
+#(system default is 20%)
+vm.dirty_ratio=10
+# Start background writeback (via writeback threads) at this percentage (system
+# default is 10%)
+vm.dirty_background_ratio=3
+# The swappiness parameter controls the tendency of the kernel to move
+# processes out of physical memory and onto the swap disk.
+# 0 tells the kernel to avoid swapping processes out of physical memory
+# for as long as possible
+# 100 tells the kernel to aggressively swap processes out of physical
+# memory and move them to swap cache
+vm.swappiness=1
+# The total time the scheduler will consider a migrated process
+# "cache hot" and thus less likely to be re-migrated
+# (system default is 500000, i.e. 0.5 ms)
+kernel.sched_migration_cost_ns=5000000
+# TCP Keepalive
+net.ipv4.tcp_keepalive_time=120
+# NUMA zone reclaim to zero
+vm.zone_reclaim_mode=0
+# Kernel PID Max
+kernel.pid_max=65536
+# https://jira.mongodb.org/browse/DOCS-6174
+# Max map count should be 2x Max incoming connections
+vm.max_map_count=128000' | sudo tee -a /etc/tuned/mongodb/tuned.conf
+tuned-adm profile mongodb
