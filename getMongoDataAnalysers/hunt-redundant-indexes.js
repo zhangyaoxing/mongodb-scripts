@@ -11,7 +11,7 @@ function isPrefix(keys1, keys2, vals1, vals2) {
         return isPrefix;
     }
 };
-function huntRedundantIndex(json) {
+function huntRedundantIndexes(json) {
     print("|ns|redundant|covered|");
     print("|-----|-----|-----|");
     json.filter(doc => /getIndexes/.test(doc.command)).forEach(doc => {
@@ -41,3 +41,10 @@ function huntRedundantIndex(json) {
         });
     });
 };
+
+const fs = require('fs');
+function huntRedundantIndexesFromFile(file) {
+    let raw = fs.readFileSync(file);
+    let json = JSON.parse(raw);
+    huntRedundantIndexes(json);
+}
